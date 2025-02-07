@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -32,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
 data class ShoppingItem(
@@ -42,7 +45,7 @@ data class ShoppingItem(
 )
 
 @Composable
-fun MyShoppingListApp(){
+fun MyShoppingListApp() {
     var sItems by remember { mutableStateOf(listOf<ShoppingItem>()) }
     var showDialog by remember { mutableStateOf(false) }
     var itemName by remember { mutableStateOf("") }
@@ -51,32 +54,27 @@ fun MyShoppingListApp(){
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .background(color = Color.Black)
+            .padding(16.dp)
+            .offset(x = 0.dp, y = 32.dp),
         verticalArrangement = Arrangement.Center,
 
         ) {
+
         Button(
             onClick = {
                 showDialog = true
             },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text("Add Item")
-        }
-        Button(
-            onClick = {
-                showDialog = true
-            },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier.align(Alignment.CenterHorizontally),
         ) {
             Text("Add Item")
         }
 
-        //List
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(16.dp)
+                .fillMaxSize()
+
         ) {
             items(sItems) { item ->
                 if (item.isEditing) {
@@ -103,6 +101,7 @@ fun MyShoppingListApp(){
         }
 
 
+
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = {
@@ -110,7 +109,9 @@ fun MyShoppingListApp(){
                 },
                 confirmButton = {
                     Row(
-                        modifier = Modifier.padding(8.dp),
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Button(onClick = {
@@ -142,7 +143,8 @@ fun MyShoppingListApp(){
                         modifier = Modifier
                             .padding(8.dp)
                     ) {
-                        Text("item name")
+                        Text("Item Name:")
+                        Spacer(Modifier.height(8.dp))
 
                         OutlinedTextField(
                             value = itemName,
@@ -152,13 +154,11 @@ fun MyShoppingListApp(){
                             singleLine = true,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(8.dp),
-
-
-                            )
+                        )
                         Spacer(Modifier.height(24.dp))
 
-                        Text("item qty")
+                        Text("Item Quantity:")
+                        Spacer(Modifier.height(8.dp))
 
                         OutlinedTextField(
                             value = itemQuantity,
@@ -167,9 +167,8 @@ fun MyShoppingListApp(){
                             },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
-
-
-                            )
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
                     }
                 }
 
@@ -226,10 +225,11 @@ fun ShoppingListItem(
             .padding(8.dp)
             .fillMaxWidth()
             .border(
-                border = BorderStroke(2.dp, Color.Cyan),
+                border = BorderStroke(2.dp, Color.LightGray),
                 shape = RoundedCornerShape(20)
             ),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = item.name, modifier = Modifier.padding(8.dp))
         Text("Qty: ${item.quantity}", modifier = Modifier.padding(8.dp))
